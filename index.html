@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111116">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="UNO Tussenuren">
+<meta name="mobile-web-app-capable" content="yes">
+
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="uno-tussenuren-icon-180.png">
+
+<title>UNO Tussenuren 🃏</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --red:#ff2633;--red2:#c91420;--blue:#168cff;--blue2:#0754a0;
+ --yellow:#ffd21f;--green:#19b85b;--bg:#0c0c0f;--card:#18181d;
+ --card2:#222229;--line:#34343d;--muted:#9999a3;--white:#fff;
+}
+body{
+ min-height:100vh;background:
+ radial-gradient(circle at 10% 5%,rgba(255,38,51,.16),transparent 25%),
+ radial-gradient(circle at 90% 15%,rgba(22,140,255,.15),transparent 25%),
+ var(--bg);color:var(--white);
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+ padding:14px;padding-bottom:calc(28px + env(safe-area-inset-bottom));
+}
+button,input{font:inherit}
+button{cursor:pointer}
+.app{max-width:1050px;margin:auto}
+header{text-align:center;padding:12px 0 20px}
+.logo{
+ width:92px;height:92px;margin:auto;border-radius:50%;background:#ed1c24;
+ border:6px solid #fff;display:flex;align-items:center;justify-content:center;
+ transform:rotate(-7deg);box-shadow:0 14px 35px #0008
+}
+.logo span{font-size:27px;font-weight:1000;font-style:italic;text-shadow:3px 3px #111}
+h1{font-size:32px;margin-top:15px}
+.header-sub{color:var(--muted);margin-top:5px}
+
+.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:15px;position:sticky;top:7px;z-index:20}
+.nav button{background:#17171b;color:#aaa;border:1px solid var(--line);padding:11px 5px;border-radius:13px;font-weight:800;font-size:12px}
+.nav button.active{background:#fff;color:#111}
+
+.page{display:none}.page.active{display:block}
+.card{background:rgba(24,24,29,.96);border:1px solid var(--line);border-radius:21px;padding:19px;margin-bottom:15px;box-shadow:0 12px 30px #0005}
+.title{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:15px}
+.title h2{font-size:19px}.title span{font-size:11px;color:var(--muted)}
+
+.week{background:linear-gradient(135deg,#24242c,#141419);border:1px solid #3b3b46;border-radius:19px;text-align:center;padding:17px;margin-bottom:15px}
+.week-label{font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1px}
+.week-date{font-size:20px;font-weight:900;margin-top:5px}.week-time{font-size:12px;color:#888;margin-top:4px}
+
+.scoreboard{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.player{min-height:285px;border-radius:24px;padding:20px;text-align:center;position:relative;overflow:hidden}
+.player.red{background:linear-gradient(145deg,#ff3945,#b80e18)}
+.player.blue{background:linear-gradient(145deg,#159bff,#064e91)}
+.player:after{content:"";position:absolute;width:190px;height:190px;border:25px solid #fff1;border-radius:50%;right:-80px;bottom:-80px}
+.avatar{width:57px;height:57px;margin:auto;border-radius:50%;background:#fff2;display:grid;place-items:center;font-size:28px;position:relative;z-index:2}
+.player-name{font-size:21px;font-weight:900;margin-top:8px;position:relative;z-index:2}
+.score{font-size:72px;line-height:1;font-weight:1000;margin:15px 0;position:relative;z-index:2}
+.streak{font-size:12px;margin-bottom:14px;position:relative;z-index:2}
+.plus{border:0;background:#fff;color:#111;padding:13px 19px;border-radius:99px;font-weight:900;position:relative;z-index:3;box-shadow:0 7px 15px #0004}
+.pop{animation:pop .35s}@keyframes pop{50%{transform:scale(1.13)}}
+
+.winner{text-align:center;padding:17px;border-radius:18px;background:linear-gradient(135deg,#ffd21f18,#fff3);border:1px solid #ffd21f55}
+.winner .big{font-size:30px}.winner h2{margin-top:3px}.winner p{color:#aaa;font-size:13px;margin-top:4px}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.stat{background:var(--card2);border-radius:15px;padding:13px 7px;text-align:center}
+.stat-icon{font-size:20px}.stat-number{font-size:26px;font-weight:1000;margin-top:4px}.stat-label{font-size:10px;color:#888;margin-top:2px}
+
+.total-grid,.history-score{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.total{background:var(--card2);padding:18px;border-radius:17px;text-align:center}
+.total.red{border-top:5px solid var(--red)}.total.blue{border-top:5px solid var(--blue)}
+.total-name{font-weight:800}.total-number{font-size:42px;font-weight:1000}.total-label{font-size:11px;color:#888}
+
+.matches{display:flex;flex-direction:column;gap:7px}.match{display:flex;justify-content:space-between;align-items:center;background:var(--card2);border-radius:12px;padding:10px 13px}
+.match-left{display:flex;gap:9px;align-items:center}.match-icon{width:31px;height:31px;border-radius:50%;background:#33333b;display:grid;place-items:center}.time{font-size:10px;color:#777}
+
+.chart{height:230px;display:flex;align-items:flex-end;gap:10px;overflow-x:auto;padding:10px 5px 28px}
+.bar-group{height:100%;min-width:54px;display:flex;align-items:flex-end;justify-content:center;gap:5px;position:relative}
+.bar{width:20px;border-radius:7px 7px 3px 3px;min-height:4px;position:relative}
+.bar.red{background:var(--red)}.bar.blue{background:var(--blue)}
+.bar-value{position:absolute;top:-18px;width:100%;text-align:center;font-size:10px}.bar-label{position:absolute;bottom:-25px;left:-18px;width:55px;text-align:center;color:#777;font-size:9px}
+
+.history-item{background:var(--card2);border-radius:16px;padding:14px;margin-bottom:9px}
+.history-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}.history-date{font-weight:800;font-size:13px}
+.delete{border:0;background:#33333a;color:#aaa;border-radius:8px;padding:6px 8px;font-size:10px}
+.history-player{padding:10px;border-radius:11px;text-align:center;font-weight:800}.history-player.red{background:#ff263322;color:#ff6a72}.history-player.blue{background:#168cff22;color:#5ab1ff}
+.history-winner{text-align:center;color:var(--yellow);font-size:11px;font-weight:800;margin-top:9px}
+
+.achievements{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.achievement{background:var(--card2);border-radius:15px;padding:14px;border:1px solid var(--line)}.achievement.locked{opacity:.35;filter:grayscale(1)}
+.achievement-icon{font-size:26px}.achievement-name{font-weight:900;margin-top:6px}.achievement-desc{font-size:10px;color:#888;margin-top:3px}
+
+.setting{background:var(--card2);border-radius:15px;padding:14px;margin-bottom:10px}.setting label{display:block;color:#aaa;font-size:11px;margin-bottom:6px}.setting input{width:100%;border:1px solid #44444d;background:#111115;color:#fff;border-radius:10px;padding:11px;outline:none}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px}.btn{border:0;border-radius:11px;padding:11px 14px;font-weight:800}.white{background:#fff;color:#111}.gray{background:#33333b;color:#fff}.danger{background:#ff263322;color:#ff6972}
+
+.install-box{background:linear-gradient(135deg,#168cff18,#ff263318);border:1px solid #ffffff18}
+.install-box p{color:#aaa;font-size:13px;line-height:1.5;margin-bottom:12px}
+
+.modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:20px;z-index:100}
+.modal.show{display:flex}.modal-box{width:min(400px,100%);background:#1d1d23;border:1px solid #444;border-radius:22px;padding:24px;text-align:center}.modal-box .emoji{font-size:48px}.modal-box p{color:#aaa;margin:8px 0 18px}.modal-actions{display:flex;justify-content:center;gap:8px}
+
+.confetti{position:fixed;top:-20px;z-index:200;font-size:14px;animation:fall 2.4s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+footer{text-align:center;color:#5f5f68;font-size:10px;padding:7px 0 20px}
+
+@media(max-width:700px){
+ body{padding:10px}h1{font-size:27px}.logo{width:82px;height:82px}.scoreboard{grid-template-columns:1fr}
+ .stats{grid-template-columns:repeat(2,1fr)}.total-grid{grid-template-columns:1fr}.player{min-height:265px}
+ .nav{top:5px}.card{padding:16px}.achievements{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+  <div class="logo"><span>UNO</span></div>
+  <h1>UNO Tussenuren 🃏</h1>
+  <p class="header-sub">Jullie officiële tussenuren-competitie</p>
+</header>
+
+<nav class="nav">
+  <button class="active" onclick="showPage('home',this)">🏠 Home</button>
+  <button onclick="showPage('historyPage',this)">📊 Weken</button>
+  <button onclick="showPage('achievementsPage',this)">🏅 Awards</button>
+  <button onclick="showPage('settingsPage',this)">⚙️ Instellingen</button>
+</nav>
+
+<section id="home" class="page active">
+
+  <div class="week">
+    <div class="week-label">Huidige UNO-week</div>
+    <div class="week-date" id="weekDate">-</div>
+    <div class="week-time">Woensdag 14:15 → woensdag 14:15</div>
+  </div>
+
+  <section class="card">
+    <div class="title"><h2>🏆 Deze week</h2><span id="gamesThisWeek">0 potjes</span></div>
+    <div class="scoreboard">
+
+      <div class="player red">
+        <div class="avatar" id="avatar1">👩</div>
+        <div class="player-name" id="playerName1">Speler 1</div>
+        <div class="score" id="score1">0</div>
+        <div class="streak" id="streak1">🔥 0 op rij</div>
+        <button class="plus" onclick="addWin(1)">🃏 Potje gewonnen</button>
+      </div>
+
+      <div class="player blue">
+        <div class="avatar" id="avatar2">👩</div>
+        <div class="player-name" id="playerName2">Speler 2</div>
+        <div class="score" id="score2">0</div>
+        <div class="streak" id="streak2">🔥 0 op rij</div>
+        <button class="plus" onclick="addWin(2)">🃏 Potje gewonnen</button>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="winner">
+      <div class="big" id="winnerEmoji">🤝</div>
+      <h2 id="winnerText">Het staat gelijk!</h2>
+      <p id="winnerSubtext">Speel een potje om de leiding te pakken.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="title"><h2>📈 Statistieken</h2></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-icon">🎮</div><div class="stat-number" id="totalGames">0</div><div class="stat-label">potjes totaal</div></div>
+      <div class="stat"><div class="stat-icon">👑</div><div class="stat-number" id="weeksWon">0</div><div class="stat-label">gewonnen weken</div></div>
+      <div class="stat"><div class="stat-icon">🔥</div><div class="stat-number" id="bestStreak">0</div><div class="stat-label">beste streak</div></div>
+      <div class="stat"><div class="stat-icon">📅</div><div class="stat-number" id="weeksPlayed">0</div><div class="stat-label">weken gespeeld</div></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="title"><h2>⚡ Recente potjes</h2><span>nieuwste bovenaan</span></div>
+    <div class="matches" id="recentMatches"></div>
+  </section>
+
+  <section class="card">
+    <div class="title"><h2>🏆 Aller tijden</h2></div>
+    <div class="total-grid">
+      <div class="total red"><div class="total-name" id="totalName1">Speler 1</div><div class="total-number" id="total1">0</div><div class="total-label">gewonnen potjes</div></div>
+      <div class="total blue"><div class="total-name" id="totalName2">Speler 2</div><div class="total-number" id="total2">0</div><div class="total-label">gewonnen potjes</div></div>
+    </div>
+  </section>
+
+</section>
+
+<section id="historyPage" class="page">
+  <section class="card">
+    <div class="title"><h2>📊 Score per week</h2><span>laatste 12</span></div>
+    <div class="chart" id="chart"></div>
+  </section>
+
+  <section class="card">
+    <div class="title"><h2>📅 Weekgeschiedenis</h2><span id="weekCount">0 weken</span></div>
+    <div id="historyList"></div>
+  </section>
+
+  <section class="card">
+    <div class="btnrow">
+      <button class="btn gray" onclick="startNewWeek()">🔄 Nieuwe week starten</button>
+    </div>
+  </section>
+</section>
+
+<section id="achievementsPage" class="page">
+  <section class="card">
+    <div class="title"><h2>🏅 Achievements</h2><span id="achievementCount">0 / 8</span></div>
+    <div class="achievements" id="achievements"></div>
+  </section>
+</section>
+
+<section id="settingsPage" class="page">
+
+  <section class="card">
+    <div class="title"><h2>👯 Spelers</h2></div>
+    <div class="setting">
+      <label>Naam speler 1</label>
+      <input id="settingName1" maxlength="20">
+    </div>
+    <div class="setting">
+      <label>Naam speler 2</label>
+      <input id="settingName2" maxlength="20">
+    </div>
+    <div class="setting">
+      <label>Emoji speler 1</label>
+      <input id="settingAvatar1" maxlength="4">
+    </div>
+    <div class="setting">
+      <label>Emoji speler 2</label>
+      <input id="settingAvatar2" maxlength="4">
+    </div>
+    <button class="btn white" onclick="saveSettings()">💾 Opslaan</button>
+  </section>
+
+  <section class="card install-box">
+    <div class="title"><h2>📱 Op je telefoon</h2></div>
+    <p><b>iPhone:</b> open de website in Safari → tik op Deel → <b>Zet op beginscherm</b>. Het UNO-icoon wordt automatisch gebruikt.</p>
+    <p><b>Android:</b> open de website in Chrome → menu ⋮ → <b>Toevoegen aan startscherm</b> of <b>App installeren</b>.</p>
+  </section>
+
+  <section class="card">
+    <div class="title"><h2>🔧 Wedstrijd</h2></div>
+    <p style="color:#999;line-height:1.5;margin-bottom:12px">Een wedstrijdweek loopt automatisch van woensdag 14:15 tot de volgende woensdag 14:15.</p>
+    <div class="btnrow">
+      <button class="btn gray" onclick="startNewWeek()">🔄 Week opnieuw beginnen</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="title"><h2>⚠️ Gegevens</h2></div>
+    <p style="color:#999;line-height:1.5;margin-bottom:12px">Verwijdert alle scores, weken en potjes van dit apparaat.</p>
+    <button class="btn danger" onclick="resetAll()">🗑️ Alles wissen</button>
+  </section>
+
+</section>
+
+<footer>🃏 UNO Tussenuren • Versie 2 • Scores worden automatisch opgeslagen</footer>
+</div>
+
+<div class="modal" id="winModal">
+  <div class="modal-box">
+    <div class="emoji">🃏</div>
+    <h2 id="modalTitle">Potje gewonnen!</h2>
+    <p id="modalText">Lekker gespeeld!</p>
+    <div class="modal-actions"><button class="btn white" onclick="closeModal()">🎉 Nice!</button></div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY="unoTussenurenV2";
+
+let data=JSON.parse(localStorage.getItem(STORAGE_KEY))||{
+  names:{player1:"Speler 1",player2:"Speler 2"},
+  avatars:{player1:"👩",player2:"👩"},
+  weeks:{},
+  currentWeek:{start:"",score1:0,score2:0,matches:[]}
+};
+
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(data));}
+
+function weekStart(){
+  const now=new Date();
+  const day=now.getDay();
+  const since=(day-3+7)%7;
+  const start=new Date(now);
+  start.setDate(now.getDate()-since);
+  start.setHours(14,15,0,0);
+  if(day===3 && now<start) start.setDate(start.getDate()-7);
+  return start;
+}
+
+function weekEnd(start){
+  const d=new Date(start); d.setDate(d.getDate()+7); return d;
+}
+
+function key(d){
+  const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+
+function fmt(d){
+  return d.toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"});
+}
+
+function time(d){
+  return d.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"});
+}
+
+function ensureWeek(){
+  const k=key(weekStart());
+  if(!data.currentWeek.start){data.currentWeek.start=k;save();return;}
+  if(data.currentWeek.start!==k){
+    if(data.currentWeek.score1||data.currentWeek.score2){
+      data.weeks[data.currentWeek.start]={
+        score1:data.currentWeek.score1,
+        score2:data.currentWeek.score2,
+        matches:data.currentWeek.matches||[]
+      };
+    }
+    data.currentWeek={start:k,score1:0,score2:0,matches:[]};
+    save();
+  }
+}
+
+function addWin(player){
+  ensureWeek();
+  if(player===1)data.currentWeek.score1++; else data.currentWeek.score2++;
+  data.currentWeek.matches.push({player,time:new Date().toISOString()});
+  save(); update(); showWin(player);
+}
+
+function showWin(player){
+  const n=player===1?data.names.player1:data.names.player2;
+  document.getElementById("modalTitle").textContent=n+" wint het potje!";
+  document.getElementById("modalText").textContent="🔥 De tussenstand is bijgewerkt.";
+  document.getElementById("winModal").classList.add("show");
+  const s=document.getElementById("score"+player);s.classList.remove("pop");void s.offsetWidth;s.classList.add("pop");
+  confetti();
+}
+
+function closeModal(){document.getElementById("winModal").classList.remove("show");}
+
+function confetti(){
+  const symbols=["🟥","🟨","🟩","🟦","⭐","✨"];
+  for(let i=0;i<30;i++){
+    const x=document.createElement("div");x.className="confetti";
+    x.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+    x.style.left=Math.random()*100+"vw";
+    x.style.animationDuration=(1.4+Math.random()*1.8)+"s";
+    document.body.appendChild(x);setTimeout(()=>x.remove(),3500);
+  }
+}
+
+function totals(){
+  let a=data.currentWeek.score1,b=data.currentWeek.score2;
+  Object.values(data.weeks).forEach(w=>{a+=w.score1||0;b+=w.score2||0});
+  return {a,b};
+}
+
+function allMatches(){
+  const arr=[];
+  Object.keys(data.weeks).sort().forEach(k=>arr.push(...(data.weeks[k].matches||[])));
+  arr.push(...(data.currentWeek.matches||[]));
+  return arr;
+}
+
+function streak(player){
+  let s=0;const arr=allMatches();
+  for(let i=arr.length-1;i>=0;i--){if(arr[i].player===player)s++;else break}
+  return s;
+}
+
+function bestStreak(player){
+  let best=0,cur=0;
+  allMatches().forEach(m=>{if(m.player===player){cur++;best=Math.max(best,cur)}else cur=0});
+  return best;
+}
+
+function weeksWon(){
+  let a=0,b=0;
+  Object.values(data.weeks).forEach(w=>{if(w.score1>w.score2)a++;else if(w.score2>w.score1)b++});
+  return {a,b};
+}
+
+function updateWinner(){
+  const a=data.currentWeek.score1,b=data.currentWeek.score2;
+  const e=document.getElementById("winnerEmoji"),t=document.getElementById("winnerText"),s=document.getElementById("winnerSubtext");
+  if(a===0&&b===0){e.textContent="🤝";t.textContent="Het staat gelijk!";s.textContent="Speel een potje om de leiding te pakken.";return}
+  if(a>b){e.textContent="🔥";t.textContent=data.names.player1+" staat voor!";s.textContent="Met "+(a-b)+" potje verschil."}
+  else if(b>a){e.textContent="🔥";t.textContent=data.names.player2+" staat voor!";s.textContent="Met "+(b-a)+" potje verschil."}
+  else{e.textContent="⚔️";t.textContent="Het staat weer gelijk!";s.textContent="Alles kan nog gebeuren."}
+}
+
+function updateRecent(){
+  const c=document.getElementById("recentMatches"),arr=data.currentWeek.matches||[];
+  if(!arr.length){c.innerHTML='<div class="match"><div class="match-left"><div class="match-icon">🃏</div>Nog geen potjes gespeeld</div></div>';return}
+  c.innerHTML="";
+  [...arr].reverse().slice(0,8).forEach(m=>{
+    const n=m.player===1?data.names.player1:data.names.player2;
+    const av=m.player===1?data.avatars.player1:data.avatars.player2;
+    const d=new Date(m.time);
+    c.insertAdjacentHTML("beforeend",`<div class="match"><div class="match-left"><div class="match-icon">${escape(av)}</div><div><b>${escape(n)}</b><div class="time">${time(d)}</div></div></div><b>🏆</b></div>`);
+  });
+}
+
+function updateHistory(){
+  const c=document.getElementById("historyList"),keys=Object.keys(data.weeks).sort().reverse();
+  document.getElementById("weekCount").textContent=keys.length+(keys.length===1?" week":" weken");
+  if(!keys.length){c.innerHTML='<p style="color:#777">Nog geen afgelopen weken.</p>';updateChart();return}
+  c.innerHTML="";
+  keys.forEach(k=>{
+    const w=data.weeks[k],st=new Date(k+"T14:15:00"),en=weekEnd(st);
+    let winner="🤝 Gelijkspel";
+    if(w.score1>w.score2)winner="🏆 "+escape(data.names.player1);
+    if(w.score2>w.score1)winner="🏆 "+escape(data.names.player2);
+    c.insertAdjacentHTML("beforeend",`
+      <div class="history-item">
+        <div class="history-head"><div class="history-date">📅 ${fmt(st)} → ${fmt(en)}</div><button class="delete" onclick="deleteWeek('${k}')">Verwijder</button></div>
+        <div class="history-score">
+          <div class="history-player red">${escape(data.names.player1)}<br>${w.score1}</div>
+          <div class="history-player blue">${escape(data.names.player2)}<br>${w.score2}</div>
+        </div>
+        <div class="history-winner">${winner}</div>
+      </div>`);
+  });
+  updateChart();
+}
+
+function updateChart(){
+  const c=document.getElementById("chart"),keys=Object.keys(data.weeks).sort().slice(-12);
+  if(!keys.length){c.innerHTML='<p style="color:#777;margin:auto">Nog geen gegevens voor een grafiek.</p>';return}
+  let max=1;keys.forEach(k=>max=Math.max(max,data.weeks[k].score1,data.weeks[k].score2));c.innerHTML="";
+  keys.forEach(k=>{
+    const w=data.weeks[k],st=new Date(k+"T14:15:00"),a=Math.max(5,w.score1/max*170),b=Math.max(5,w.score2/max*170);
+    c.insertAdjacentHTML("beforeend",`<div class="bar-group"><div class="bar red" style="height:${a}px"><div class="bar-value">${w.score1}</div></div><div class="bar blue" style="height:${b}px"><div class="bar-value">${w.score2}</div><div class="bar-label">${fmt(st)}</div></div></div>`);
+  });
+}
+
+function achievements(){
+  const t=totals(),w=weeksWon(),games=t.a+t.b,b1=bestStreak(1),b2=bestStreak(2);
+  return [
+    ["🎮","Eerste potje","Win jullie eerste UNO-potje.",games>=1],
+    ["🔥","5 op rij","Win 5 potjes achter elkaar.",Math.max(b1,b2)>=5],
+    ["💥","10 wins","Win samen 10 potjes.",games>=10],
+    ["📅","Eerste week","Maak een eerste week af.",Object.keys(data.weeks).length>=1],
+    ["👑","Weekwinnaar","Win een volledige week.",w.a+w.b>=1],
+    ["⚡","20 potjes","Speel 20 potjes.",games>=20],
+    ["🚀","50 potjes","Speel 50 potjes.",games>=50],
+    ["💎","UNO-legende","Speel 100 potjes.",games>=100]
+  ];
+}
+
+function updateAchievements(){
+  const list=achievements(),c=document.getElementById("achievements"),u=list.filter(x=>x[3]).length;
+  document.getElementById("achievementCount").textContent=u+" / "+list.length;c.innerHTML="";
+  list.forEach(a=>c.insertAdjacentHTML("beforeend",`<div class="achievement ${a[3]?"":"locked"}"><div class="achievement-icon">${a[0]}</div><div class="achievement-name">${a[1]}</div><div class="achievement-desc">${a[2]}</div></div>`));
+}
+
+function loadSettings(){
+  settingName1.value=data.names.player1;settingName2.value=data.names.player2;
+  settingAvatar1.value=data.avatars.player1;settingAvatar2.value=data.avatars.player2;
+}
+
+function saveSettings(){
+  data.names.player1=settingName1.value.trim()||"Speler 1";
+  data.names.player2=settingName2.value.trim()||"Speler 2";
+  data.avatars.player1=settingAvatar1.value.trim()||"👩";
+  data.avatars.player2=settingAvatar2.value.trim()||"👩";
+  save();update();alert("Instellingen opgeslagen! 💾");
+}
+
+function startNewWeek(){
+  if(!data.currentWeek.score1&&!data.currentWeek.score2){alert("Deze week heeft nog geen scores.");return}
+  data.weeks[data.currentWeek.start]={score1:data.currentWeek.score1,score2:data.currentWeek.score2,matches:data.currentWeek.matches||[]};
+  data.currentWeek={start:key(weekStart()),score1:0,score2:0,matches:[]};
+  save();update();alert("Nieuwe UNO-week gestart! 🃏");
+}
+
+function deleteWeek(k){if(!confirm("Deze week verwijderen?"))return;delete data.weeks[k];save();update()}
+
+function resetAll(){
+  if(!confirm("Weet je zeker dat je ALLE scores en weken wilt verwijderen?"))return;
+  data={names:{player1:"Speler 1",player2:"Speler 2"},avatars:{player1:"👩",player2:"👩"},weeks:{},currentWeek:{start:key(weekStart()),score1:0,score2:0,matches:[]}};
+  save();update();
+}
+
+function showPage(id,btn){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");btn.classList.add("active");window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function escape(x){
+  return String(x).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+
+function update(){
+  ensureWeek();
+  const st=new Date(data.currentWeek.start+"T14:15:00"),en=weekEnd(st),t=totals(),w=weeksWon(),games=t.a+t.b;
+  weekDate.textContent=fmt(st)+" → "+fmt(en);
+  playerName1.textContent=data.names.player1;playerName2.textContent=data.names.player2;
+  totalName1.textContent=data.names.player1;totalName2.textContent=data.names.player2;
+  avatar1.textContent=data.avatars.player1;avatar2.textContent=data.avatars.player2;
+  score1.textContent=data.currentWeek.score1;score2.textContent=data.currentWeek.score2;
+  streak1.textContent="🔥 "+streak(1)+" op rij";streak2.textContent="🔥 "+streak(2)+" op rij";
+  gamesThisWeek.textContent=(data.currentWeek.score1+data.currentWeek.score2)+" potjes";
+  total1.textContent=t.a;total2.textContent=t.b;totalGames.textContent=games;
+  weeksWon.textContent=w.a+w.b;bestStreak.textContent=Math.max(bestStreak(1),bestStreak(2));
+  weeksPlayed.textContent=Object.keys(data.weeks).length;
+  updateWinner();updateRecent();updateHistory();updateAchievements();loadSettings();
+}
+
+ensureWeek();update();
+
+setInterval(()=>{const before=data.currentWeek.start;ensureWeek();if(before!==data.currentWeek.start)update()},60000);
+document.getElementById("winModal").addEventListener("click",e=>{if(e.target.id==="winModal")closeModal()});
+
+if("serviceWorker" in navigator && location.protocol!=="file:"){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>

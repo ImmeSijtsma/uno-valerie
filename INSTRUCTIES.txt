@@ -1,0 +1,22 @@
+UNO TUSSENUREN – BESTANDEN
+
+In deze map staan:
+- index.html       = de volledige app
+- manifest.json    = maakt de website installeerbaar als app
+- sw.js            = zorgt voor PWA/offline ondersteuning
+- uno-tussenuren-icon-180.png
+- uno-tussenuren-icon-512.png
+
+ONLINE ZETTEN:
+Upload ALLE bestanden naar dezelfde hoofdmap van je website.
+
+iPHONE:
+1. Open de HTTPS-website in Safari.
+2. Tik op Deel.
+3. Kies 'Zet op beginscherm'.
+4. Kies 'Voeg toe'.
+5. De app gebruikt het UNO Tussenuren-icoon.
+
+BELANGRIJK:
+De huidige versie slaat scores lokaal op in de browser. Jij en je vriendin delen dus nog NIET automatisch dezelfde score.
+Voor een echte gedeelde competitie moeten we daarna een online database (bijvoorbeeld Firebase) toevoegen.

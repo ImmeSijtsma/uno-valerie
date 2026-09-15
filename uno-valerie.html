@@ -1,0 +1,3313 @@
+```html
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111111">
+
+<title>UNO Tussenuren 🃏</title>
+
+<style>
+
+/* =========================================================
+   BASIS
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --red: #ff2633;
+    --red-dark: #c91420;
+    --blue: #168cff;
+    --blue-dark: #0754a0;
+    --yellow: #ffd21f;
+    --green: #19b85b;
+    --dark: #0e0e10;
+    --dark2: #17171b;
+    --dark3: #222228;
+    --white: #ffffff;
+    --gray: #a8a8b0;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(255,38,51,.15), transparent 25%),
+        radial-gradient(circle at 90% 20%, rgba(22,140,255,.15), transparent 25%),
+        radial-gradient(circle at 50% 100%, rgba(255,210,31,.08), transparent 30%),
+        var(--dark);
+    color: white;
+    padding: 15px;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.app {
+    width: 100%;
+    max-width: 1050px;
+    margin: auto;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header {
+    text-align: center;
+    padding: 15px 0 25px;
+}
+
+.logo {
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    border-radius: 50%;
+    background: var(--red);
+    border: 7px solid white;
+    box-shadow:
+        0 0 0 5px rgba(255,38,51,.2),
+        0 15px 40px rgba(0,0,0,.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: rotate(-8deg);
+}
+
+.logo span {
+    font-size: 28px;
+    font-weight: 1000;
+    font-style: italic;
+    text-shadow: 3px 3px 0 #111;
+}
+
+header h1 {
+    margin-top: 17px;
+    font-size: 34px;
+}
+
+header p {
+    color: var(--gray);
+    margin-top: 6px;
+}
+
+
+/* =========================================================
+   NAVIGATIE
+========================================================= */
+
+.nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.nav button {
+    border: 1px solid #303038;
+    background: var(--dark2);
+    color: #aaa;
+    border-radius: 13px;
+    padding: 11px 5px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.nav button.active {
+    background: white;
+    color: #111;
+}
+
+
+/* =========================================================
+   PAGINA'S
+========================================================= */
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card {
+    background: rgba(23,23,27,.94);
+    border: 1px solid #303038;
+    border-radius: 22px;
+    padding: 20px;
+    margin-bottom: 17px;
+    box-shadow: 0 15px 35px rgba(0,0,0,.25);
+}
+
+.card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 17px;
+}
+
+.card-title h2 {
+    font-size: 20px;
+}
+
+.card-title span {
+    color: var(--gray);
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   WEEK BANNER
+========================================================= */
+
+.week-banner {
+    background:
+        linear-gradient(135deg, #25252d, #151519);
+    border: 1px solid #393942;
+    border-radius: 20px;
+    padding: 19px;
+    text-align: center;
+    margin-bottom: 17px;
+}
+
+.week-small {
+    color: #999;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.week-date {
+    font-size: 21px;
+    font-weight: 900;
+    margin-top: 5px;
+}
+
+.week-time {
+    color: #aaa;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+
+/* =========================================================
+   SCOREBOARD
+========================================================= */
+
+.scoreboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.player-card {
+    min-height: 290px;
+    border-radius: 25px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.player-card.red {
+    background:
+        radial-gradient(circle at 80% 15%, rgba(255,255,255,.2), transparent 25%),
+        linear-gradient(145deg, #ff3440, #b70d17);
+}
+
+.player-card.blue {
+    background:
+        radial-gradient(circle at 80% 15%, rgba(255,255,255,.2), transparent 25%),
+        linear-gradient(145deg, #159bff, #064f92);
+}
+
+.player-card::after {
+    content: "";
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    border: 25px solid rgba(255,255,255,.08);
+    border-radius: 50%;
+    right: -80px;
+    bottom: -80px;
+}
+
+.avatar {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.18);
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 29px;
+    position: relative;
+    z-index: 2;
+}
+
+.player-name {
+    font-size: 21px;
+    font-weight: 900;
+    margin-top: 9px;
+    position: relative;
+    z-index: 2;
+}
+
+.score {
+    font-size: 75px;
+    line-height: 1;
+    font-weight: 1000;
+    margin: 15px 0;
+    position: relative;
+    z-index: 2;
+}
+
+.win-streak {
+    font-size: 13px;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.plus-btn {
+    border: 0;
+    background: white;
+    color: #111;
+    padding: 13px 22px;
+    border-radius: 100px;
+    font-weight: 900;
+    position: relative;
+    z-index: 3;
+    box-shadow: 0 6px 15px rgba(0,0,0,.25);
+}
+
+.plus-btn:hover {
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   WINNER
+========================================================= */
+
+.current-winner {
+    text-align: center;
+    padding: 19px;
+    border-radius: 18px;
+    background:
+        linear-gradient(135deg, rgba(255,210,31,.15), rgba(255,255,255,.04));
+    border: 1px solid rgba(255,210,31,.35);
+}
+
+.current-winner .emoji {
+    font-size: 30px;
+}
+
+.current-winner h2 {
+    margin-top: 5px;
+    font-size: 22px;
+}
+
+.current-winner p {
+    color: #aaa;
+    margin-top: 4px;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.stat {
+    background: var(--dark3);
+    border-radius: 17px;
+    padding: 15px 8px;
+    text-align: center;
+}
+
+.stat-icon {
+    font-size: 21px;
+}
+
+.stat-number {
+    font-size: 27px;
+    font-weight: 900;
+    margin-top: 5px;
+}
+
+.stat-label {
+    color: #999;
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+
+/* =========================================================
+   RECENTE POTJES
+========================================================= */
+
+.match-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.match {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--dark3);
+    border-radius: 13px;
+    padding: 11px 14px;
+}
+
+.match-left {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+}
+
+.match-icon {
+    width: 31px;
+    height: 31px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #33333a;
+}
+
+.match-time {
+    color: #888;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   TOTAAL
+========================================================= */
+
+.total-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 13px;
+}
+
+.total {
+    border-radius: 19px;
+    padding: 20px;
+    text-align: center;
+    background: var(--dark3);
+}
+
+.total.red {
+    border-top: 5px solid var(--red);
+}
+
+.total.blue {
+    border-top: 5px solid var(--blue);
+}
+
+.total-name {
+    font-weight: bold;
+}
+
+.total-number {
+    font-size: 43px;
+    font-weight: 1000;
+    margin-top: 5px;
+}
+
+.total-label {
+    color: #888;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   GRAFIEK
+========================================================= */
+
+.chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    height: 230px;
+    padding: 15px 5px 5px;
+    overflow-x: auto;
+}
+
+.bar-group {
+    min-width: 55px;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 5px;
+}
+
+.bar {
+    width: 20px;
+    border-radius: 7px 7px 3px 3px;
+    min-height: 4px;
+    position: relative;
+}
+
+.bar.red {
+    background: var(--red);
+}
+
+.bar.blue {
+    background: var(--blue);
+}
+
+.bar-value {
+    position: absolute;
+    top: -19px;
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+}
+
+.bar-label {
+    position: absolute;
+    bottom: -22px;
+    width: 70px;
+    left: -25px;
+    text-align: center;
+    font-size: 9px;
+    color: #777;
+}
+
+
+/* =========================================================
+   GESCHIEDENIS
+========================================================= */
+
+.history-item {
+    background: var(--dark3);
+    border-radius: 17px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 11px;
+}
+
+.history-date {
+    font-weight: bold;
+}
+
+.delete-week {
+    background: #33333a;
+    color: #aaa;
+    border: 0;
+    border-radius: 9px;
+    padding: 6px 9px;
+    font-size: 11px;
+}
+
+.history-score {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.history-player {
+    border-radius: 11px;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.history-player.red {
+    background: rgba(255,38,51,.2);
+    color: #ff5a63;
+}
+
+.history-player.blue {
+    background: rgba(22,140,255,.2);
+    color: #55adff;
+}
+
+.history-winner {
+    text-align: center;
+    margin-top: 10px;
+    color: var(--yellow);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   ACHIEVEMENTS
+========================================================= */
+
+.achievements {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.achievement {
+    background: var(--dark3);
+    border-radius: 15px;
+    padding: 15px;
+    border: 1px solid #303038;
+}
+
+.achievement.locked {
+    opacity: .4;
+    filter: grayscale(1);
+}
+
+.achievement-icon {
+    font-size: 28px;
+}
+
+.achievement-name {
+    font-weight: bold;
+    margin-top: 7px;
+}
+
+.achievement-description {
+    color: #888;
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+
+/* =========================================================
+   INSTELLINGEN
+========================================================= */
+
+.setting-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.setting {
+    background: var(--dark3);
+    padding: 15px;
+    border-radius: 15px;
+}
+
+.setting label {
+    display: block;
+    color: #aaa;
+    font-size: 12px;
+    margin-bottom: 7px;
+}
+
+.setting input {
+    width: 100%;
+    border: 1px solid #44444c;
+    background: #111115;
+    color: white;
+    border-radius: 10px;
+    padding: 11px;
+    outline: none;
+}
+
+.save-btn,
+.secondary-btn,
+.danger-btn {
+    border: 0;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-weight: bold;
+}
+
+.save-btn {
+    background: white;
+    color: #111;
+}
+
+.secondary-btn {
+    background: #33333a;
+    color: white;
+}
+
+.danger-btn {
+    background: rgba(255,38,51,.15);
+    color: #ff6670;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.72);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-box {
+    width: 100%;
+    max-width: 400px;
+    background: #1d1d22;
+    border: 1px solid #44444c;
+    border-radius: 22px;
+    padding: 25px;
+    text-align: center;
+}
+
+.modal-box h2 {
+    margin-bottom: 10px;
+}
+
+.modal-box p {
+    color: #aaa;
+    margin-bottom: 20px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+.confetti {
+    position: fixed;
+    top: -20px;
+    width: 9px;
+    height: 15px;
+    z-index: 200;
+    animation: fall 2.5s linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform:
+            translateY(110vh)
+            rotate(720deg);
+        opacity: 0;
+    }
+}
+
+
+/* =========================================================
+   POTJE ANIMATIE
+========================================================= */
+
+.pop {
+    animation: pop .35s ease;
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.12);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+    text-align: center;
+    color: #666;
+    padding: 15px 0 25px;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   MOBIEL
+========================================================= */
+
+@media(max-width: 700px) {
+
+    body {
+        padding: 10px;
+    }
+
+    header h1 {
+        font-size: 27px;
+    }
+
+    .nav {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .scoreboard {
+        grid-template-columns: 1fr;
+    }
+
+    .player-card {
+        min-height: 270px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .total-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .setting-row {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+<header>
+
+    <div class="logo">
+        <span>UNO</span>
+    </div>
+
+    <h1>UNO Tussenuren 🃏</h1>
+
+    <p>
+        De officiële tussenuren-competitie
+    </p>
+
+</header>
+
+
+<!-- ======================================================
+     NAVIGATIE
+======================================================= -->
+
+<div class="nav">
+
+    <button
+        class="active"
+        onclick="showPage('home', this)"
+    >
+        🏠 Home
+    </button>
+
+    <button
+        onclick="showPage('historyPage', this)"
+    >
+        📊 Geschiedenis
+    </button>
+
+    <button
+        onclick="showPage('achievementsPage', this)"
+    >
+        🏅 Achievements
+    </button>
+
+    <button
+        onclick="showPage('settingsPage', this)"
+    >
+        ⚙️ Instellingen
+    </button>
+
+</div>
+
+
+<!-- ======================================================
+     HOME
+======================================================= -->
+
+<main id="home" class="page active">
+
+
+    <div class="week-banner">
+
+        <div class="week-small">
+            Huidige UNO-week
+        </div>
+
+        <div
+            class="week-date"
+            id="weekDate"
+        >
+            -
+        </div>
+
+        <div class="week-time">
+            Woensdag 14:15 → woensdag 14:15
+        </div>
+
+    </div>
+
+
+    <!-- SCOREBOARD -->
+
+    <section class="card">
+
+        <div class="card-title">
+
+            <h2>🏆 Deze week</h2>
+
+            <span id="gamesThisWeek">
+                0 potjes
+            </span>
+
+        </div>
+
+
+        <div class="scoreboard">
+
+
+            <!-- SPELER 1 -->
+
+            <div
+                class="player-card red"
+                id="playerCard1"
+            >
+
+                <div
+                    class="avatar"
+                    id="avatar1"
+                >
+                    👩
+                </div>
+
+                <div
+                    class="player-name"
+                    id="playerName1"
+                >
+                    Speler 1
+                </div>
+
+                <div
+                    class="score"
+                    id="score1"
+                >
+                    0
+                </div>
+
+                <div
+                    class="win-streak"
+                    id="streak1"
+                >
+                    🔥 0 op rij
+                </div>
+
+                <button
+                    class="plus-btn"
+                    onclick="addWin(1)"
+                >
+                    🃏 Potje gewonnen
+                </button>
+
+            </div>
+
+
+            <!-- SPELER 2 -->
+
+            <div
+                class="player-card blue"
+                id="playerCard2"
+            >
+
+                <div
+                    class="avatar"
+                    id="avatar2"
+                >
+                    👩
+                </div>
+
+                <div
+                    class="player-name"
+                    id="playerName2"
+                >
+                    Speler 2
+                </div>
+
+                <div
+                    class="score"
+                    id="score2"
+                >
+                    0
+                </div>
+
+                <div
+                    class="win-streak"
+                    id="streak2"
+                >
+                    🔥 0 op rij
+                </div>
+
+                <button
+                    class="plus-btn"
+                    onclick="addWin(2)"
+                >
+                    🃏 Potje gewonnen
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- WINNAAR -->
+
+    <section class="card">
+
+        <div class="current-winner">
+
+            <div
+                class="emoji"
+                id="winnerEmoji"
+            >
+                🤝
+            </div>
+
+            <h2 id="winnerText">
+                Het staat gelijk!
+            </h2>
+
+            <p id="winnerSubtext">
+                Speel een potje om de leiding te pakken.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- STATS -->
+
+    <section class="card">
+
+        <div class="card-title">
+            <h2>📈 Statistieken</h2>
+        </div>
+
+        <div class="stats">
+
+            <div class="stat">
+                <div class="stat-icon">🎮</div>
+                <div
+                    class="stat-number"
+                    id="totalGames"
+                >
+                    0
+                </div>
+                <div class="stat-label">
+                    potjes totaal
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">👑</div>
+                <div
+                    class="stat-number"
+                    id="weeksWon"
+                >
+                    0
+                </div>
+                <div class="stat-label">
+                    gewonnen weken
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">🔥</div>
+                <div
+                    class="stat-number"
+                    id="bestStreak"
+                >
+                    0
+                </div>
+                <div class="stat-label">
+                    beste streak
+                </div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">📅</div>
+                <div
+                    class="stat-number"
+                    id="weeksPlayed"
+                >
+                    0
+                </div>
+                <div class="stat-label">
+                    weken gespeeld
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RECENTE POTJES -->
+
+    <section class="card">
+
+        <div class="card-title">
+
+            <h2>⚡ Recente potjes</h2>
+
+            <span>
+                nieuwste bovenaan
+            </span>
+
+        </div>
+
+        <div
+            class="match-list"
+            id="recentMatches"
+        >
+            <div class="match">
+                <div class="match-left">
+                    <div class="match-icon">🃏</div>
+                    Nog geen potjes gespeeld
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- TOTALEN -->
+
+    <section class="card">
+
+        <div class="card-title">
+            <h2>🏆 Aller tijden</h2>
+        </div>
+
+        <div class="total-grid">
+
+            <div class="total red">
+
+                <div
+                    class="total-name"
+                    id="totalName1"
+                >
+                    Speler 1
+                </div>
+
+                <div
+                    class="total-number"
+                    id="total1"
+                >
+                    0
+                </div>
+
+                <div class="total-label">
+                    gewonnen potjes
+                </div>
+
+            </div>
+
+
+            <div class="total blue">
+
+                <div
+                    class="total-name"
+                    id="totalName2"
+                >
+                    Speler 2
+                </div>
+
+                <div
+                    class="total-number"
+                    id="total2"
+                >
+                    0
+                </div>
+
+                <div class="total-label">
+                    gewonnen potjes
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ======================================================
+     GESCHIEDENIS
+======================================================= -->
+
+<section
+    id="historyPage"
+    class="page"
+>
+
+
+    <section class="card">
+
+        <div class="card-title">
+
+            <h2>📊 Score per week</h2>
+
+        </div>
+
+        <div
+            class="chart"
+            id="chart"
+        >
+        </div>
+
+    </section>
+
+
+    <section class="card">
+
+        <div class="card-title">
+
+            <h2>📅 Alle weken</h2>
+
+            <span id="weekCount">
+                0 weken
+            </span>
+
+        </div>
+
+        <div id="historyList">
+
+            <p style="color:#777">
+                Nog geen afgelopen weken.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section class="card">
+
+        <button
+            class="secondary-btn"
+            onclick="startNewWeek()"
+        >
+            🔄 Nieuwe week starten
+        </button>
+
+    </section>
+
+</section>
+
+
+<!-- ======================================================
+     ACHIEVEMENTS
+======================================================= -->
+
+<section
+    id="achievementsPage"
+    class="page"
+>
+
+    <section class="card">
+
+        <div class="card-title">
+
+            <h2>🏅 Achievements</h2>
+
+            <span id="achievementCount">
+                0 / 8
+            </span>
+
+        </div>
+
+        <div
+            class="achievements"
+            id="achievements"
+        >
+        </div>
+
+    </section>
+
+</section>
+
+
+<!-- ======================================================
+     INSTELLINGEN
+======================================================= -->
+
+<section
+    id="settingsPage"
+    class="page"
+>
+
+
+    <section class="card">
+
+        <div class="card-title">
+            <h2>👯 Spelers</h2>
+        </div>
+
+
+        <div class="setting-row">
+
+            <div class="setting">
+
+                <label>
+                    Naam speler 1
+                </label>
+
+                <input
+                    id="settingName1"
+                    maxlength="20"
+                    placeholder="Naam"
+                >
+
+            </div>
+
+
+            <div class="setting">
+
+                <label>
+                    Naam speler 2
+                </label>
+
+                <input
+                    id="settingName2"
+                    maxlength="20"
+                    placeholder="Naam"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="setting-row">
+
+            <div class="setting">
+
+                <label>
+                    Emoji speler 1
+                </label>
+
+                <input
+                    id="settingAvatar1"
+                    maxlength="4"
+                    value="👩"
+                >
+
+            </div>
+
+
+            <div class="setting">
+
+                <label>
+                    Emoji speler 2
+                </label>
+
+                <input
+                    id="settingAvatar2"
+                    maxlength="4"
+                    value="👩"
+                >
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="save-btn"
+            onclick="saveSettings()"
+        >
+            💾 Opslaan
+        </button>
+
+    </section>
+
+
+    <section class="card">
+
+        <div class="card-title">
+            <h2>🔧 Wedstrijd</h2>
+        </div>
+
+        <p style="color:#999; line-height:1.5; margin-bottom:15px;">
+            Een wedstrijdweek loopt automatisch van
+            woensdag 14:15 tot de volgende woensdag 14:15.
+        </p>
+
+        <button
+            class="secondary-btn"
+            onclick="startNewWeek()"
+        >
+            🔄 Week opnieuw beginnen
+        </button>
+
+    </section>
+
+
+    <section class="card">
+
+        <div class="card-title">
+            <h2>⚠️ Gegevens</h2>
+        </div>
+
+        <p style="color:#999; line-height:1.5; margin-bottom:15px;">
+            Hiermee verwijder je alle opgeslagen
+            scores, weken en potjes.
+        </p>
+
+        <button
+            class="danger-btn"
+            onclick="resetAll()"
+        >
+            🗑️ Alles wissen
+        </button>
+
+    </section>
+
+</section>
+
+
+<footer>
+    🃏 UNO Tussenuren • Versie 2
+</footer>
+
+</div>
+
+
+<!-- ======================================================
+     WIN MODAL
+======================================================= -->
+
+<div
+    class="modal"
+    id="winModal"
+>
+
+    <div class="modal-box">
+
+        <div style="font-size:50px;">
+            🃏
+        </div>
+
+        <h2 id="modalTitle">
+            Potje gewonnen!
+        </h2>
+
+        <p id="modalText">
+            Goed gespeeld!
+        </p>
+
+        <div class="modal-buttons">
+
+            <button
+                class="save-btn"
+                onclick="closeModal()"
+            >
+                Lekker! 🎉
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   DATA
+========================================================= */
+
+let data =
+    JSON.parse(
+        localStorage.getItem("unoTussenurenV2")
+    )
+    ||
+    {
+
+        names: {
+            player1: "Speler 1",
+            player2: "Speler 2"
+        },
+
+        avatars: {
+            player1: "👩",
+            player2: "👩"
+        },
+
+        weeks: {},
+
+        currentWeek: {
+            start: "",
+            score1: 0,
+            score2: 0,
+            matches: []
+        }
+
+    };
+
+
+/* =========================================================
+   OPSLAAN
+========================================================= */
+
+function saveData() {
+
+    localStorage.setItem(
+        "unoTussenurenV2",
+        JSON.stringify(data)
+    );
+
+}
+
+
+/* =========================================================
+   DATUM
+========================================================= */
+
+function getWeekStart() {
+
+    const now = new Date();
+
+    let day =
+        now.getDay();
+
+    let daysSinceWednesday =
+        (day - 3 + 7) % 7;
+
+    let start =
+        new Date(now);
+
+    start.setDate(
+        now.getDate() - daysSinceWednesday
+    );
+
+    start.setHours(
+        14,
+        15,
+        0,
+        0
+    );
+
+    if (
+        day === 3 &&
+        now < start
+    ) {
+
+        start.setDate(
+            start.getDate() - 7
+        );
+
+    }
+
+    return start;
+
+}
+
+
+function getWeekEnd(start) {
+
+    let end =
+        new Date(start);
+
+    end.setDate(
+        end.getDate() + 7
+    );
+
+    return end;
+
+}
+
+
+function dateKey(date) {
+
+    let year =
+        date.getFullYear();
+
+    let month =
+        String(
+            date.getMonth() + 1
+        ).padStart(2, "0");
+
+    let day =
+        String(
+            date.getDate()
+        ).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+
+}
+
+
+function formatDate(date) {
+
+    return date.toLocaleDateString(
+        "nl-NL",
+        {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+        }
+    );
+
+}
+
+
+function formatTime(date) {
+
+    return date.toLocaleTimeString(
+        "nl-NL",
+        {
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+
+}
+
+
+/* =========================================================
+   WEEK CONTROLEREN
+========================================================= */
+
+function checkWeek() {
+
+    const start =
+        getWeekStart();
+
+    const key =
+        dateKey(start);
+
+
+    if (
+        !data.currentWeek.start
+    ) {
+
+        data.currentWeek.start =
+            key;
+
+        saveData();
+
+        return;
+
+    }
+
+
+    if (
+        data.currentWeek.start !== key
+    ) {
+
+        const old =
+            data.currentWeek;
+
+
+        if (
+            old.score1 > 0 ||
+            old.score2 > 0
+        ) {
+
+            data.weeks[
+                old.start
+            ] = {
+
+                score1:
+                    old.score1,
+
+                score2:
+                    old.score2,
+
+                matches:
+                    old.matches || []
+
+            };
+
+        }
+
+
+        data.currentWeek = {
+
+            start: key,
+
+            score1: 0,
+
+            score2: 0,
+
+            matches: []
+
+        };
+
+
+        saveData();
+
+    }
+
+}
+
+
+/* =========================================================
+   POTJE WINNEN
+========================================================= */
+
+function addWin(player) {
+
+    checkWeek();
+
+
+    if (player === 1) {
+
+        data.currentWeek.score1++;
+
+    } else {
+
+        data.currentWeek.score2++;
+
+    }
+
+
+    data.currentWeek.matches.push({
+
+        player: player,
+
+        time: new Date().toISOString()
+
+    });
+
+
+    saveData();
+
+    update();
+
+
+    showWinAnimation(player);
+
+}
+
+
+/* =========================================================
+   WINANIMATIE
+========================================================= */
+
+function showWinAnimation(player) {
+
+    const name =
+        player === 1
+            ? data.names.player1
+            : data.names.player2;
+
+
+    document.getElementById("modalTitle")
+        .textContent =
+        name + " wint het potje!";
+
+
+    document.getElementById("modalText")
+        .textContent =
+        "🔥 Lekker gespeeld!";
+
+
+    document
+        .getElementById("winModal")
+        .classList
+        .add("show");
+
+
+    const scoreElement =
+        document.getElementById(
+            "score" + player
+        );
+
+
+    scoreElement.classList.remove("pop");
+
+    void scoreElement.offsetWidth;
+
+    scoreElement.classList.add("pop");
+
+
+    createConfetti();
+
+}
+
+
+function closeModal() {
+
+    document
+        .getElementById("winModal")
+        .classList
+        .remove("show");
+
+}
+
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+function createConfetti() {
+
+    const symbols =
+        ["🟥","🟨","🟩","🟦","⭐","✨"];
+
+    for (
+        let i = 0;
+        i < 35;
+        i++
+    ) {
+
+        const confetti =
+            document.createElement("div");
+
+        confetti.className =
+            "confetti";
+
+        confetti.textContent =
+            symbols[
+                Math.floor(
+                    Math.random() *
+                    symbols.length
+                )
+            ];
+
+        confetti.style.left =
+            Math.random() * 100 + "vw";
+
+        confetti.style.animationDuration =
+            (1.5 + Math.random() * 2) + "s";
+
+        confetti.style.fontSize =
+            (8 + Math.random() * 10) + "px";
+
+        document.body.appendChild(
+            confetti
+        );
+
+
+        setTimeout(
+            () => confetti.remove(),
+            4000
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   TOTALEN
+========================================================= */
+
+function getTotals() {
+
+    let one =
+        data.currentWeek.score1;
+
+    let two =
+        data.currentWeek.score2;
+
+
+    Object.values(
+        data.weeks
+    ).forEach(
+        week => {
+
+            one +=
+                week.score1 || 0;
+
+            two +=
+                week.score2 || 0;
+
+        }
+    );
+
+
+    return {
+        one,
+        two
+    };
+
+}
+
+
+/* =========================================================
+   WINSTREAK
+========================================================= */
+
+function getStreak(player) {
+
+    const allMatches = [];
+
+
+    const weeks =
+        Object.values(
+            data.weeks
+        ).sort(
+            (a,b) =>
+                (a.start || "")
+                .localeCompare(
+                    b.start || ""
+                )
+        );
+
+
+    weeks.forEach(
+        week => {
+
+            if (
+                week.matches
+            ) {
+
+                allMatches.push(
+                    ...week.matches
+                );
+
+            }
+
+        }
+    );
+
+
+    if (
+        data.currentWeek.matches
+    ) {
+
+        allMatches.push(
+            ...data.currentWeek.matches
+        );
+
+    }
+
+
+    let streak = 0;
+
+
+    for (
+        let i =
+            allMatches.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        if (
+            allMatches[i].player === player
+        ) {
+
+            streak++;
+
+        } else {
+
+            break;
+
+        }
+
+    }
+
+
+    return streak;
+
+}
+
+
+function getBestStreak(player) {
+
+    const allMatches = [];
+
+
+    Object.values(
+        data.weeks
+    )
+    .sort(
+        (a,b) =>
+            (a.start || "")
+            .localeCompare(
+                b.start || ""
+            )
+    )
+    .forEach(
+        week => {
+
+            if (
+                week.matches
+            ) {
+
+                allMatches.push(
+                    ...week.matches
+                );
+
+            }
+
+        }
+    );
+
+
+    allMatches.push(
+        ...(data.currentWeek.matches || [])
+    );
+
+
+    let best = 0;
+    let current = 0;
+
+
+    allMatches.forEach(
+        match => {
+
+            if (
+                match.player === player
+            ) {
+
+                current++;
+
+                best =
+                    Math.max(
+                        best,
+                        current
+                    );
+
+            } else {
+
+                current = 0;
+
+            }
+
+        }
+    );
+
+
+    return best;
+
+}
+
+
+/* =========================================================
+   GEWONNEN WEKEN
+========================================================= */
+
+function getWeeksWon() {
+
+    let one = 0;
+    let two = 0;
+
+
+    Object.values(
+        data.weeks
+    ).forEach(
+        week => {
+
+            if (
+                week.score1 >
+                week.score2
+            ) {
+
+                one++;
+
+            }
+
+            else if (
+                week.score2 >
+                week.score1
+            ) {
+
+                two++;
+
+            }
+
+        }
+    );
+
+
+    return {
+        one,
+        two
+    };
+
+}
+
+
+/* =========================================================
+   TOTAAL POTJES
+========================================================= */
+
+function getTotalGames() {
+
+    const totals =
+        getTotals();
+
+    return (
+        totals.one +
+        totals.two
+    );
+
+}
+
+
+/* =========================================================
+   WINNAAR
+========================================================= */
+
+function updateWinner() {
+
+    const one =
+        data.currentWeek.score1;
+
+    const two =
+        data.currentWeek.score2;
+
+
+    const emoji =
+        document.getElementById(
+            "winnerEmoji"
+        );
+
+    const text =
+        document.getElementById(
+            "winnerText"
+        );
+
+    const sub =
+        document.getElementById(
+            "winnerSubtext"
+        );
+
+
+    if (
+        one === 0 &&
+        two === 0
+    ) {
+
+        emoji.textContent =
+            "🤝";
+
+        text.textContent =
+            "Het staat gelijk!";
+
+        sub.textContent =
+            "Speel een potje om de leiding te pakken.";
+
+        return;
+
+    }
+
+
+    if (one > two) {
+
+        emoji.textContent =
+            "🔥";
+
+        text.textContent =
+            data.names.player1 +
+            " staat voor!";
+
+        sub.textContent =
+            "Met " +
+            (one - two) +
+            " potje verschil.";
+
+    }
+
+    else if (two > one) {
+
+        emoji.textContent =
+            "🔥";
+
+        text.textContent =
+            data.names.player2 +
+            " staat voor!";
+
+        sub.textContent =
+            "Met " +
+            (two - one) +
+            " potje verschil.";
+
+    }
+
+    else {
+
+        emoji.textContent =
+            "⚔️";
+
+        text.textContent =
+            "Het staat weer gelijk!";
+
+        sub.textContent =
+            "Alles kan nog gebeuren.";
+
+    }
+
+}
+
+
+/* =========================================================
+   RECENTE POTJES
+========================================================= */
+
+function updateRecentMatches() {
+
+    const container =
+        document.getElementById(
+            "recentMatches"
+        );
+
+
+    const matches =
+        data.currentWeek.matches || [];
+
+
+    if (
+        matches.length === 0
+    ) {
+
+        container.innerHTML = `
+            <div class="match">
+                <div class="match-left">
+                    <div class="match-icon">🃏</div>
+                    Nog geen potjes gespeeld
+                </div>
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    [...matches]
+        .reverse()
+        .slice(0, 8)
+        .forEach(
+            match => {
+
+                const name =
+                    match.player === 1
+                        ? data.names.player1
+                        : data.names.player2;
+
+
+                const avatar =
+                    match.player === 1
+                        ? data.avatars.player1
+                        : data.avatars.player2;
+
+
+                const time =
+                    new Date(
+                        match.time
+                    );
+
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+                div.className =
+                    "match";
+
+
+                div.innerHTML = `
+
+                    <div class="match-left">
+
+                        <div class="match-icon">
+                            ${avatar}
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                ${escapeHTML(name)}
+                            </strong>
+
+                            <div class="match-time">
+                                ${formatTime(time)}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <strong>🏆</strong>
+
+                `;
+
+
+                container.appendChild(div);
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   GESCHIEDENIS
+========================================================= */
+
+function updateHistory() {
+
+    const container =
+        document.getElementById(
+            "historyList"
+        );
+
+
+    const keys =
+        Object.keys(
+            data.weeks
+        )
+        .sort()
+        .reverse();
+
+
+    document.getElementById(
+        "weekCount"
+    ).textContent =
+        keys.length +
+        (
+            keys.length === 1
+                ? " week"
+                : " weken"
+        );
+
+
+    if (
+        keys.length === 0
+    ) {
+
+        container.innerHTML = `
+            <p style="color:#777">
+                Nog geen afgelopen weken.
+            </p>
+        `;
+
+        updateChart();
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    keys.forEach(
+        key => {
+
+            const week =
+                data.weeks[key];
+
+
+            const start =
+                new Date(
+                    key + "T14:15:00"
+                );
+
+
+            const end =
+                getWeekEnd(start);
+
+
+            let winner =
+                "🤝 Gelijkspel";
+
+
+            if (
+                week.score1 >
+                week.score2
+            ) {
+
+                winner =
+                    "🏆 " +
+                    escapeHTML(
+                        data.names.player1
+                    );
+
+            }
+
+            else if (
+                week.score2 >
+                week.score1
+            ) {
+
+                winner =
+                    "🏆 " +
+                    escapeHTML(
+                        data.names.player2
+                    );
+
+            }
+
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.className =
+                "history-item";
+
+
+            div.innerHTML = `
+
+                <div class="history-header">
+
+                    <div class="history-date">
+                        📅 ${formatDate(start)}
+                        →
+                        ${formatDate(end)}
+                    </div>
+
+                    <button
+                        class="delete-week"
+                        onclick="deleteWeek('${key}')"
+                    >
+                        Verwijder
+                    </button>
+
+                </div>
+
+
+                <div class="history-score">
+
+                    <div class="history-player red">
+
+                        ${escapeHTML(
+                            data.names.player1
+                        )}
+
+                        <br>
+
+                        ${week.score1}
+
+                    </div>
+
+
+                    <div class="history-player blue">
+
+                        ${escapeHTML(
+                            data.names.player2
+                        )}
+
+                        <br>
+
+                        ${week.score2}
+
+                    </div>
+
+                </div>
+
+
+                <div class="history-winner">
+                    ${winner}
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                div
+            );
+
+        }
+    );
+
+
+    updateChart();
+
+}
+
+
+/* =========================================================
+   GRAFIEK
+========================================================= */
+
+function updateChart() {
+
+    const chart =
+        document.getElementById(
+            "chart"
+        );
+
+
+    const keys =
+        Object.keys(
+            data.weeks
+        )
+        .sort();
+
+
+    if (
+        keys.length === 0
+    ) {
+
+        chart.innerHTML =
+            `<p style="color:#777; margin:auto;">
+                Nog geen gegevens voor een grafiek.
+            </p>`;
+
+        return;
+
+    }
+
+
+    chart.innerHTML = "";
+
+
+    let max = 1;
+
+
+    keys.forEach(
+        key => {
+
+            max =
+                Math.max(
+                    max,
+                    data.weeks[key].score1,
+                    data.weeks[key].score2
+                );
+
+        }
+    );
+
+
+    keys.slice(-12).forEach(
+        key => {
+
+            const week =
+                data.weeks[key];
+
+
+            const start =
+                new Date(
+                    key + "T14:15:00"
+                );
+
+
+            const group =
+                document.createElement(
+                    "div"
+                );
+
+            group.className =
+                "bar-group";
+
+
+            const h1 =
+                Math.max(
+                    5,
+                    (week.score1 / max) * 170
+                );
+
+
+            const h2 =
+                Math.max(
+                    5,
+                    (week.score2 / max) * 170
+                );
+
+
+            group.innerHTML = `
+
+                <div
+                    class="bar red"
+                    style="height:${h1}px"
+                >
+
+                    <div class="bar-value">
+                        ${week.score1}
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="bar blue"
+                    style="height:${h2}px"
+                >
+
+                    <div class="bar-value">
+                        ${week.score2}
+                    </div>
+
+                    <div class="bar-label">
+                        ${formatDate(start)}
+                    </div>
+
+                </div>
+
+            `;
+
+
+            chart.appendChild(
+                group
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ACHIEVEMENTS
+========================================================= */
+
+function updateAchievements() {
+
+    const container =
+        document.getElementById(
+            "achievements"
+        );
+
+
+    const totals =
+        getTotals();
+
+
+    const best1 =
+        getBestStreak(1);
+
+    const best2 =
+        getBestStreak(2);
+
+
+    const weeks =
+        Object.keys(
+            data.weeks
+        ).length;
+
+
+    const games =
+        getTotalGames();
+
+
+    const won =
+        getWeeksWon();
+
+
+    const achievements = [
+
+        {
+            icon: "🎮",
+            name: "Eerste potje",
+            description: "Win je eerste UNO-potje.",
+            unlocked: games >= 1
+        },
+
+        {
+            icon: "🔥",
+            name: "5 op rij",
+            description: "Win 5 potjes achter elkaar.",
+            unlocked:
+                best1 >= 5 ||
+                best2 >= 5
+        },
+
+        {
+            icon: "💥",
+            name: "10 wins",
+            description: "Win samen 10 potjes.",
+            unlocked:
+                totals.one + totals.two >= 10
+        },
+
+        {
+            icon: "🏆",
+            name: "Eerste week",
+            description: "Speel een volledige week.",
+            unlocked:
+                weeks >= 1
+        },
+
+        {
+            icon: "👑",
+            name: "Weekwinnaar",
+            description: "Win een volledige week.",
+            unlocked:
+                won.one >= 1 ||
+                won.two >= 1
+        },
+
+        {
+            icon: "⚡",
+            name: "20 potjes",
+            description: "Speel 20 potjes.",
+            unlocked:
+                games >= 20
+        },
+
+        {
+            icon: "🚀",
+            name: "50 potjes",
+            description: "Speel 50 potjes.",
+            unlocked:
+                games >= 50
+        },
+
+        {
+            icon: "💎",
+            name: "UNO-legende",
+            description: "Speel 100 potjes.",
+            unlocked:
+                games >= 100
+        }
+
+    ];
+
+
+    const unlocked =
+        achievements.filter(
+            a => a.unlocked
+        ).length;
+
+
+    document.getElementById(
+        "achievementCount"
+    ).textContent =
+        unlocked +
+        " / " +
+        achievements.length;
+
+
+    container.innerHTML = "";
+
+
+    achievements.forEach(
+        achievement => {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.className =
+                "achievement" +
+                (
+                    achievement.unlocked
+                        ? ""
+                        : " locked"
+                );
+
+
+            div.innerHTML = `
+
+                <div class="achievement-icon">
+                    ${achievement.icon}
+                </div>
+
+                <div class="achievement-name">
+                    ${achievement.name}
+                </div>
+
+                <div class="achievement-description">
+                    ${achievement.description}
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                div
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   INSTELLINGEN
+========================================================= */
+
+function loadSettings() {
+
+    document.getElementById(
+        "settingName1"
+    ).value =
+        data.names.player1;
+
+
+    document.getElementById(
+        "settingName2"
+    ).value =
+        data.names.player2;
+
+
+    document.getElementById(
+        "settingAvatar1"
+    ).value =
+        data.avatars.player1;
+
+
+    document.getElementById(
+        "settingAvatar2"
+    ).value =
+        data.avatars.player2;
+
+}
+
+
+function saveSettings() {
+
+    data.names.player1 =
+        document.getElementById(
+            "settingName1"
+        ).value.trim()
+        || "Speler 1";
+
+
+    data.names.player2 =
+        document.getElementById(
+            "settingName2"
+        ).value.trim()
+        || "Speler 2";
+
+
+    data.avatars.player1 =
+        document.getElementById(
+            "settingAvatar1"
+        ).value
+        || "👩";
+
+
+    data.avatars.player2 =
+        document.getElementById(
+            "settingAvatar2"
+        ).value
+        || "👩";
+
+
+    saveData();
+
+    update();
+
+    alert(
+        "Instellingen opgeslagen! 💾"
+    );
+
+}
+
+
+/* =========================================================
+   NIEUWE WEEK
+========================================================= */
+
+function startNewWeek() {
+
+    const current =
+        data.currentWeek;
+
+
+    if (
+        current.score1 === 0 &&
+        current.score2 === 0
+    ) {
+
+        alert(
+            "Deze week heeft nog geen scores."
+        );
+
+        return;
+
+    }
+
+
+    const key =
+        current.start;
+
+
+    data.weeks[key] = {
+
+        score1:
+            current.score1,
+
+        score2:
+            current.score2,
+
+        matches:
+            current.matches || []
+
+    };
+
+
+    const start =
+        new Date();
+
+
+    start.setHours(
+        14,
+        15,
+        0,
+        0
+    );
+
+
+    data.currentWeek = {
+
+        start:
+            dateKey(
+                getWeekStart()
+            ),
+
+        score1: 0,
+
+        score2: 0,
+
+        matches: []
+
+    };
+
+
+    saveData();
+
+    update();
+
+    alert(
+        "De nieuwe UNO-week is gestart! 🃏"
+    );
+
+}
+
+
+/* =========================================================
+   WEEK VERWIJDEREN
+========================================================= */
+
+function deleteWeek(key) {
+
+    if (
+        !confirm(
+            "Deze week verwijderen?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    delete data.weeks[key];
+
+    saveData();
+
+    update();
+
+}
+
+
+/* =========================================================
+   ALLES RESETTEN
+========================================================= */
+
+function resetAll() {
+
+    if (
+        !confirm(
+            "Weet je zeker dat je ALLE scores en weken wilt verwijderen?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    data = {
+
+        names: {
+            player1: "Speler 1",
+            player2: "Speler 2"
+        },
+
+        avatars: {
+            player1: "👩",
+            player2: "👩"
+        },
+
+        weeks: {},
+
+        currentWeek: {
+            start:
+                dateKey(
+                    getWeekStart()
+                ),
+            score1: 0,
+            score2: 0,
+            matches: []
+        }
+
+    };
+
+
+    saveData();
+
+    update();
+
+}
+
+
+/* =========================================================
+   PAGINA WISSELEN
+========================================================= */
+
+function showPage(
+    pageId,
+    button
+) {
+
+    document
+        .querySelectorAll(".page")
+        .forEach(
+            page =>
+                page.classList.remove(
+                    "active"
+                )
+        );
+
+
+    document
+        .querySelectorAll(".nav button")
+        .forEach(
+            btn =>
+                btn.classList.remove(
+                    "active"
+                )
+        );
+
+
+    document
+        .getElementById(pageId)
+        .classList.add("active");
+
+
+    button.classList.add("active");
+
+}
+
+
+/* =========================================================
+   UPDATE
+========================================================= */
+
+function update() {
+
+    checkWeek();
+
+
+    document.getElementById(
+        "weekDate"
+    ).textContent =
+        formatDate(
+            new Date(
+                data.currentWeek.start +
+                "T14:15:00"
+            )
+        )
+        +
+        " → " +
+        formatDate(
+            getWeekEnd(
+                new Date(
+                    data.currentWeek.start +
+                    "T14:15:00"
+                )
+            )
+        );
+
+
+    document.getElementById(
+        "playerName1"
+    ).textContent =
+        data.names.player1;
+
+
+    document.getElementById(
+        "playerName2"
+    ).textContent =
+        data.names.player2;
+
+
+    document.getElementById(
+        "avatar1"
+    ).textContent =
+        data.avatars.player1;
+
+
+    document.getElementById(
+        "avatar2"
+    ).textContent =
+        data.avatars.player2;
+
+
+    document.getElementById(
+        "score1"
+    ).textContent =
+        data.currentWeek.score1;
+
+
+    document.getElementById(
+        "score2"
+    ).textContent =
+        data.currentWeek.score2;
+
+
+    document.getElementById(
+        "streak1"
+    ).textContent =
+        "🔥 " +
+        getStreak(1) +
+        " op rij";
+
+
+    document.getElementById(
+        "streak2"
+    ).textContent =
+        "🔥 " +
+        getStreak(2) +
+        " op rij";
+
+
+    const gamesThisWeek =
+        data.currentWeek.score1 +
+        data.currentWeek.score2;
+
+
+    document.getElementById(
+        "gamesThisWeek"
+    ).textContent =
+        gamesThisWeek +
+        (
+            gamesThisWeek === 1
+                ? " potje"
+                : " potjes"
+        );
+
+
+    const totals =
+        getTotals();
+
+
+    document.getElementById(
+        "totalName1"
+    ).textContent =
+        data.names.player1;
+
+
+    document.getElementById(
+        "totalName2"
+    ).textContent =
+        data.names.player2;
+
+
+    document.getElementById(
+        "total1"
+    ).textContent =
+        totals.one;
+
+
+    document.getElementById(
+        "total2"
+    ).textContent =
+        totals.two;
+
+
+    document.getElementById(
+        "totalGames"
+    ).textContent =
+        getTotalGames();
+
+
+    const won =
+        getWeeksWon();
+
+
+    document.getElementById(
+        "weeksWon"
+    ).textContent =
+        won.one + won.two;
+
+
+    document.getElementById(
+        "bestStreak"
+    ).textContent =
+        Math.max(
+            getBestStreak(1),
+            getBestStreak(2)
+        );
+
+
+    document.getElementById(
+        "weeksPlayed"
+    ).textContent =
+        Object.keys(
+            data.weeks
+        ).length;
+
+
+    updateWinner();
+
+    updateRecentMatches();
+
+    updateHistory();
+
+    updateAchievements();
+
+    loadSettings();
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(text) {
+
+    return String(text)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================================
+   START APP
+========================================================= */
+
+checkWeek();
+
+update();
+
+
+/*
+   Iedere minuut controleren of er
+   een nieuwe woensdagweek is begonnen.
+*/
+
+setInterval(
+    () => {
+
+        const old =
+            data.currentWeek.start;
+
+        checkWeek();
+
+        if (
+            old !==
+            data.currentWeek.start
+        ) {
+
+            update();
+
+        }
+
+    },
+    60000
+);
+
+
+/*
+   Klik buiten de modal om hem te sluiten.
+*/
+
+document
+    .getElementById("winModal")
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target === this
+            ) {
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
+```
